@@ -1,43 +1,58 @@
-# Astro Starter Kit: Minimal
+# Fernando Guedez - Web Designer & Full Stack Developer Portfolio
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Welcome to the repository of my personal portfolio website. This project showcases my professional experience, featured projects, and technical skills, built with a focus on premium aesthetics, high performance, and flawless user experience.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## ✨ Key Features
 
-## 🚀 Project Structure
+- **Premium Modern Design**: High-impact typography, dark mode, glassmorphism, and sophisticated micro-animations inspired by top-tier design studios.
+- **Spacious & Dynamic Layouts**: Custom layouts to display projects and credentials with maximum legibility and architectural style.
+- **Extreme Performance**: Built with Astro for zero-JS by default, delivering blazing-fast load times.
+- **Technical SEO Optimized**: Full Open Graph implementation, JSON-LD structured data, dynamic meta tags, and high Lighthouse scores.
+- **Responsive & Accessible**: Fully responsive across all devices with careful attention to interactive states and tap targets.
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🛠️ Tech Stack
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+- **Framework**: [Astro](https://astro.build/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **UI Components**: [React](https://react.dev/) (Astro Islands)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com/) (using `@astrojs/cloudflare`)
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🚀 Getting Started
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+If you want to run this project locally, follow these steps:
 
-Any static assets, like images, can be placed in the `public/` directory.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/FguedezR/ferguedez-web.git
+   ```
 
-## 🧞 Commands
+2. **Navigate to the project directory:**
+   ```bash
+   cd ferguedez-web
+   ```
 
-All commands are run from the root of the project, from a terminal:
+3. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
 
-## 👀 Want to learn more?
+5. Open your browser and navigate to `http://localhost:4321` (or the port specified in your terminal) to view the project.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 👨‍💻 About the Author
+
+**Fernando Guedez**  
+*Web Designer & Full Stack Developer based in Madrid, Spain.*  
+Crafting premium, high-performance web experiences through strategic design and robust full-stack development.
+
+- **GitHub**: [@FguedezR](https://github.com/FguedezR)
+- **LinkedIn**: [Fernando Guedez](https://www.linkedin.com/in/fernando-guedez)
+
+## 📄 License
+
+This project is intended as a personal portfolio. All custom design and layout rights are reserved, but you may use the structural code as inspiration for your own projects.

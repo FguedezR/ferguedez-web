@@ -26,3 +26,7 @@ Thumbs.db
 
 # --- Temporary / Cache ---
 .cache/
+
+# --- AI Agents / Local Context ---
+.agents/
+skills-lock.json
