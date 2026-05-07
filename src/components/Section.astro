@@ -1,0 +1,39 @@
+---
+interface Props {
+  id: string;
+  title: string;
+}
+
+const { id, title } = Astro.props;
+---
+
+<section id={id} class="py-20 opacity-0 translate-y-8 transition-all duration-1000 ease-out fade-in-section">
+  <h2 class="text-3xl font-bold mb-10 text-gray-900 dark:text-white flex items-center gap-4">
+    {title}
+  </h2>
+  <slot />
+</section>
+
+<script>
+  const setupObserver = () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove('opacity-0', 'translate-y-8');
+          entry.target.classList.add('opacity-100', 'translate-y-0');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+    document.querySelectorAll('.fade-in-section').forEach((el) => {
+      observer.observe(el);
+    });
+  };
+
+  // Run on first load
+  setupObserver();
+  
+  // Run on View Transitions if enabled later
+  document.addEventListener('astro:page-load', setupObserver);
+</script>

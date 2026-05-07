@@ -1,22 +1,134 @@
 ---
-import "../styles/styles.css"
-import "../scripts/script"
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import AboutMe from '../components/AboutMe.astro';
+import Section from '../components/Section.astro';
+import ExperienceItem from '../components/ExperienceItem.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { Award, ExternalLink } from 'lucide-react';
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fernando Guedez | Desarrollador Web</title>
-  </head>
-  <body>
-    <header>
-      <h1>ferguedez.dev</h1>
-    </header>
-    <main>
-      <p>Próximamente: Mi nueva web personal.</p>
-    </main>
-    <script src="../scripts/script.js"></script>
-  </body>
-</html>
+<Layout title="Fernando Guedez | Web Designer & Full Stack Developer" description="Fernando Guedez's Portfolio - Transforming complex ideas into intuitive and scalable digital experiences.">
+  <Header />
+  
+  <main class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-12 mb-32 overflow-hidden w-full flex-1">
+    <Hero />
+    <AboutMe />
+    
+    <Section id="experience" title="Experience">
+      <div class="mt-8 space-y-6">
+        <ExperienceItem 
+          date="Sept 2025 - Present"
+          title="Web Developer & Web Designer"
+          company="Hadock Comunicación"
+          description="Focus on full stack web development, design and wordpress"
+          stack={['Astro', 'React', 'WordPress', 'Figma', 'TailwindCSS']}
+        />
+        <ExperienceItem 
+          date="Mar 2024 - Sept 2025"
+          title="Web Designer"
+          company="Hadock Comunicación"
+          description="Focus on WordPress/WooCommerce and CSS customization."
+          stack={['WordPress', 'WooCommerce', 'CSS', 'Figma']}
+        />
+        <ExperienceItem 
+          date="Jun 2022 - Mar 2024"
+          title="Graphic Designer"
+          company="Hadock Comunicación"
+          description="Visual identity and Branding for various brands."
+          stack={['Illustrator', 'Photoshop', 'InDesign']}
+        />
+      </div>
+    </Section>
+
+    <Section id="education" title="Education">
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ExperienceItem 
+          date="2026"
+          title="Bootcamp Full Stack & UX/UI"
+          company="The Bridge"
+        />
+        <ExperienceItem 
+          date="2022"
+          title="FP Professional Education"
+          company="Tajamar"
+        />
+      </div>
+    </Section>
+    
+    <Section id="certifications" title="Certifications">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <!-- Credential 1: Claude Code in Action -->
+        <div class="p-8 rounded-3xl bg-white/60 dark:bg-gray-900/40 backdrop-blur-xl border border-white/40 dark:border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] hover:shadow-lg transition-all duration-300 relative overflow-hidden flex flex-col group">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+          <Award className="relative z-10 text-blue-500 mb-5" size={32} />
+          <h3 class="relative z-10 text-xl font-bold text-gray-900 dark:text-white mb-2">Claude Code in Action</h3>
+          <p class="relative z-10 text-gray-600 dark:text-gray-400 font-medium">Anthropic</p>
+          <div class="relative z-10 text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6">Mar 2026</div>
+          <a href="https://verify.skilljar.com/c/423n4k7kv8x7" target="_blank" rel="noopener noreferrer" class="relative z-10 mt-auto inline-flex items-center gap-2 px-5 py-2.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full text-sm font-bold hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors w-fit border border-blue-100 dark:border-blue-800/50 group/btn">
+            View Credential
+            <ExternalLink size={16} className="group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5 transition-transform" />
+          </a>
+        </div>
+        
+        <!-- Credential 2: MongoDB -->
+        <div class="p-8 rounded-3xl bg-white/60 dark:bg-gray-900/40 backdrop-blur-xl border border-white/40 dark:border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] hover:shadow-lg transition-all duration-300 relative overflow-hidden flex flex-col group">
+          <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+          <Award className="relative z-10 text-emerald-500 mb-5" size={32} />
+          <h3 class="relative z-10 text-xl font-bold text-gray-900 dark:text-white mb-2">MongoDB</h3>
+          <p class="relative z-10 text-gray-600 dark:text-gray-400 font-medium">MongoDB University</p>
+          <div class="relative z-10 text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6">Dec 2025</div>
+          <a href="https://www.credly.com/badges/929ea7d2-bd26-4ef8-a5e1-04977c3d60e1/linked_in_profile" target="_blank" rel="noopener noreferrer" class="relative z-10 mt-auto inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 rounded-full text-sm font-bold hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors w-fit border border-emerald-100 dark:border-emerald-800/50 group/btn">
+            View Credential
+            <ExternalLink size={16} className="group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5 transition-transform" />
+          </a>
+        </div>
+      </div>
+    </Section>
+
+    <Section id="projects" title="Featured Projects">
+      <div class="flex flex-col gap-16 mt-12">
+        <ProjectCard 
+          title="Brick Estudio"
+          description="Platform with a contemporary and renewed approach to integral architecture."
+          image="https://hadock.es/wp-content/uploads/2025/11/proyecto-brick-estudio-second-main.webp"
+          tags={['Branding', 'Web Design']}
+          link="https://brickestudio.com/"
+        />
+        <ProjectCard 
+          title="Marcodecor"
+          description="eCommerce and web creation. A window to your memories, the 'House of Photo Frames'."
+          image="https://hadock.es/wp-content/uploads/2023/08/marcodecor_background.jpg"
+          tags={['eCommerce', 'Web Design']}
+          link="https://www.marcodecor.com/"
+        />
+        <ProjectCard 
+          title="Estudio Ollero"
+          description="We refreshed the visual identity to reflect the generational handover of this architecture studio."
+          image="https://hadock.es/wp-content/uploads/2025/10/estudio-ollero-proyecto-la-torre-1.webp"
+          tags={['Branding', 'Web Design']}
+          link="https://estudioollero.es/"
+        />
+        <ProjectCard 
+          title="Ramón Fernández-Alonso"
+          description="Relaunch of an architecture studio creating a compelling brand to bring its vision to life."
+          image="https://hadock.es/wp-content/uploads/2024/10/Escuela-Universitaria-de-Magisterio_1.jpg"
+          tags={['Consulting', 'Web Design']}
+          link="https://fernandezalonso.com/"
+        />
+        <ProjectCard 
+          title="David Vidales"
+          description="Renewing the digital presence of the pilot. We built an attractive identity highlighting the fusion between art and engineering."
+          image="https://hadock.es/wp-content/uploads/2024/10/proyecto_david_vidales.webp"
+          tags={['Web Design', 'Branding', 'Marketing']}
+          link="https://davidvidalesracing.com/"
+        />
+      </div>
+    </Section>
+  </main>
+  
+  <footer class="py-8 text-center text-gray-500 dark:text-gray-400 text-sm border-t border-gray-200 dark:border-gray-800">
+    <p>© {new Date().getFullYear()} Fernando Guedez. All rights reserved.</p>
+  </footer>
+</Layout>

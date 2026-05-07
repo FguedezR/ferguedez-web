@@ -1,0 +1,44 @@
+---
+import Section from './Section.astro';
+
+const devSkills = [
+  'JavaScript', 'React/Next.js', 'Node.js', 'Nest.js', 
+  'MongoDB', 'Git', 'ExpressJS', 'TailwindCSS', 'CSS', 'HTML'
+];
+
+const designSkills = [
+  'Figma', 'Illustrator', 'Photoshop', 'InDesign'
+];
+---
+
+<Section id="about" title="About Me">
+  <div class="space-y-8 mt-2">
+    <p class="text-gray-600 dark:text-gray-400 text-lg leading-relaxed text-balance">
+      I am a hybrid professional passionate about technology and aesthetics, with the ability to transition from the visual conceptualization of a product to its architectural implementation in code.
+    </p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+      <div class="p-6 rounded-2xl bg-white/60 dark:bg-gray-900/40 backdrop-blur-md border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Developer Technical Skills</h3>
+        <div class="flex flex-wrap gap-2">
+          {devSkills.map(skill => (
+            <span class="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium border border-blue-100 dark:border-blue-900/50">
+              {skill}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-white/60 dark:bg-gray-900/40 backdrop-blur-md border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Technical Web Designer Skills</h3>
+        <div class="flex flex-wrap gap-2">
+          {designSkills.map(skill => (
+            <span class="px-3 py-1.5 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-lg text-sm font-medium border border-purple-100 dark:border-purple-900/50">
+              {skill}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</Section>
