@@ -6,5 +6,6 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
   site: "https://ferguedez.dev",
-  adapter: cloudflare()
+  output: "static",
+  adapter: cloudflare(),
 });
