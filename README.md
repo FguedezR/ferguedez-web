@@ -4,8 +4,9 @@ Welcome to the repository of my personal portfolio website. This project showcas
 
 ## ✨ Key Features
 
-- **Premium Modern Design**: High-impact typography, dark mode, glassmorphism, and sophisticated micro-animations inspired by top-tier design studios.
-- **Spacious & Dynamic Layouts**: Custom layouts to display projects and credentials with maximum legibility and architectural style.
+- **Academic & Modern Design**: Geist Sans and Geist Mono typography, a monochrome palette with a single ink-blue accent, hairline rules and very subtle radii.
+- **Paper-like Layout**: Numbered sections with a sticky table of contents that highlights the active section.
+- **Light & Dark Themes**: Theme toggle that respects the system preference and persists without a flash of unstyled content.
 - **Extreme Performance**: Built with Astro for zero-JS by default, delivering blazing-fast load times.
 - **Technical SEO Optimized**: Full Open Graph implementation, JSON-LD structured data, dynamic meta tags, and high Lighthouse scores.
 - **Responsive & Accessible**: Fully responsive across all devices with careful attention to interactive states and tap targets.
@@ -14,6 +15,7 @@ Welcome to the repository of my personal portfolio website. This project showcas
 
 - **Framework**: [Astro](https://astro.build/)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Typography**: [Geist & Geist Mono](https://vercel.com/font) (self-hosted via the Astro Fonts API)
 - **UI Components**: [React](https://react.dev/) (Astro Islands)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Deployment**: [Cloudflare Pages](https://pages.cloudflare.com/) (using `@astrojs/cloudflare`)

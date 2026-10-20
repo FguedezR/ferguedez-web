@@ -1,0 +1,48 @@
+---
+import { sections } from '../data/sections';
+---
+
+<aside class="hidden lg:block">
+  <nav class="sticky top-24" aria-label="Contents">
+    <p class="label-mono text-subtle mb-4">Contents</p>
+    <ol class="border-l border-line">
+      {sections.map((s) => (
+        <li>
+          <a
+            href={`#${s.id}`}
+            data-index-link={s.id}
+            class="-ml-px flex items-baseline gap-3 border-l border-transparent pl-4 py-1.5 text-sm text-muted hover:text-fg transition-colors data-[active]:border-fg data-[active]:text-fg"
+          >
+            <span class="label-mono text-subtle">{s.index}</span>
+            {s.title}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+</aside>
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>('[data-index-link]');
+  const setActive = (id: string) => {
+    links.forEach((l) => l.toggleAttribute('data-active', l.dataset.indexLink === id));
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    },
+    { rootMargin: '-30% 0px -60% 0px' }
+  );
+
+  links.forEach((l) => {
+    const target = document.getElementById(l.dataset.indexLink!);
+    if (target) observer.observe(target);
+  });
+
+  // Over the hero no section is active
+  const home = document.getElementById('home');
+  if (home) observer.observe(home);
+</script>

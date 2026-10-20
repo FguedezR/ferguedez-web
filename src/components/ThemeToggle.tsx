@@ -20,15 +20,15 @@ export default function ThemeToggle() {
     window.localStorage.setItem('theme', t);
   };
 
-  if (theme === 'system') return <div className="w-9 h-9" />;
+  if (theme === 'system') return <div className="w-8 h-8" />;
 
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-      aria-label="Toggle Dark Mode"
+      className="w-8 h-8 inline-flex items-center justify-center rounded-sm border border-line text-muted hover:text-fg hover:border-line-strong transition-colors"
+      aria-label={theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
     >
-      {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+      {theme === 'light' ? <Moon size={15} strokeWidth={1.75} /> : <Sun size={15} strokeWidth={1.75} />}
     </button>
   );
 }
