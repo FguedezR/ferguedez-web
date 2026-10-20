@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+  issuer: string;
+  date: string;
+  link: string;
+}
+
+const { title, issuer, date, link } = Astro.props;
+---
+
+<article class="grid grid-cols-1 sm:grid-cols-[180px_1fr_auto] items-baseline gap-x-8 gap-y-2 py-6 border-b border-line last:border-b-0">
+  <div class="label-mono text-subtle">{date}</div>
+
+  <div>
+    <h3 class="text-base md:text-lg font-medium tracking-tight text-fg">{title}</h3>
+    <p class="text-sm text-muted mt-0.5">{issuer}</p>
+  </div>
+
+  <a href={link} target="_blank" rel="noopener noreferrer" class="label-mono text-accent link-underline w-fit">
+    View credential ↗
+  </a>
+</article>

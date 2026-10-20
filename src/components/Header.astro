@@ -1,20 +1,46 @@
 ---
 import ThemeToggle from './ThemeToggle';
+import { sections } from '../data/sections';
 ---
 
-<header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/70 dark:bg-[#0a0a0a]/70 border-b border-gray-200 dark:border-gray-800">
-  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-    <a href="#" class="text-xl font-extrabold tracking-tighter text-gray-900 dark:text-white">FG.</a>
-    
-    <nav class="hidden md:flex items-center gap-6">
-      <a href="#about" class="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">About</a>
-      <a href="#experience" class="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">Experience</a>
-      <a href="#education" class="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">Education</a>
-      <a href="#projects" class="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">Projects</a>
-    </nav>
-    
-    <div class="flex items-center gap-4">
+<header class="sticky top-0 z-50 w-full bg-bg/90 backdrop-blur-sm border-b border-line">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-6">
+    <a href="#" class="flex items-center gap-3 text-fg">
+      <span class="font-mono text-[13px] font-semibold border border-fg rounded-xs px-1.5 py-0.5 leading-none">FG</span>
+      <span class="hidden sm:inline text-sm font-medium tracking-tight">Fernando Guedez</span>
+    </a>
+
+    <div class="flex items-center gap-2">
+      <nav class="hidden md:flex items-center gap-1" aria-label="Main">
+        {sections.map((s) => (
+          <a href={`#${s.id}`} class="px-2.5 py-1.5 text-sm text-muted hover:text-fg rounded-sm transition-colors">
+            {s.title}
+          </a>
+        ))}
+      </nav>
+
+      <details class="md:hidden relative group">
+        <summary class="list-none cursor-pointer label-mono text-muted hover:text-fg px-2.5 py-2 border border-line rounded-sm [&::-webkit-details-marker]:hidden">
+          Index
+        </summary>
+        <nav class="absolute right-0 mt-2 w-52 bg-surface border border-line rounded-md p-1.5 shadow-sm" aria-label="Main mobile">
+          {sections.map((s) => (
+            <a href={`#${s.id}`} class="flex items-baseline gap-3 px-3 py-2 text-sm text-fg rounded-sm hover:bg-accent-soft">
+              <span class="label-mono text-subtle">{s.index}</span>
+              {s.title}
+            </a>
+          ))}
+        </nav>
+      </details>
+
       <ThemeToggle client:load />
     </div>
   </div>
 </header>
+
+<script>
+  // Close the mobile index after choosing a section
+  document.querySelectorAll('header details nav a').forEach((a) => {
+    a.addEventListener('click', () => a.closest('details')?.removeAttribute('open'));
+  });
+</script>
