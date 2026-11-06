@@ -11,6 +11,9 @@ import ProjectCard from '../components/ProjectCard.astro';
 import LabItem from '../components/LabItem.astro';
 import WebpPreview from '../components/WebpPreview.astro';
 import VideoPreview from '../components/VideoPreview.astro';
+import { lab } from '../data/lab';
+
+const previews = { video: VideoPreview, webp: WebpPreview };
 
 const projects = [
   {
@@ -123,24 +126,14 @@ const projects = [
         <p class="-mt-4 mb-10 max-w-[60ch] text-muted leading-relaxed">
           Small tools and experiments built in the open.
         </p>
-        <LabItem
-          label="Latest"
-          title="Video Converter"
-          description="A browser-based video compressor for background heroes, with no uploads. Trim the clip, pick a poster frame and export WebM (VP9) and MP4 (H.264) versions, plus a ready-to-paste HTML snippet, as a ZIP."
-          tags={['Tool', 'Client-side', 'WebCodecs', 'Video optimization']}
-          link="https://video.ferguedez.dev/"
-        >
-          <VideoPreview slot="preview" />
-        </LabItem>
-        <LabItem
-          label="Previous"
-          title="WebP Converter"
-          description="A privacy-first image converter that runs entirely in the browser, with no uploads. Drop images or a whole folder, set quality and maximum size, and download optimized WebP files as a ZIP."
-          tags={['Tool', 'Client-side', 'Image optimization']}
-          link="https://webp.ferguedez.dev/"
-        >
-          <WebpPreview slot="preview" />
-        </LabItem>
+        {lab.map(({ preview, tagline, ...item }) => {
+          const Preview = previews[preview];
+          return (
+            <LabItem label="Latest" {...item}>
+              <Preview slot="preview" />
+            </LabItem>
+          );
+        })}
       </Section>
     </main>
   </div>

@@ -1,6 +1,9 @@
 ---
 import { ArrowRight } from 'lucide-react';
 import HeroField from './HeroField.astro';
+import { lab } from '../data/lab';
+
+const [latest] = lab;
 ---
 
 <section id="home" class="relative isolate pt-16 pb-20 md:pt-24 md:pb-28">
@@ -14,7 +17,8 @@ import HeroField from './HeroField.astro';
       <span class="text-line-strong">/</span>
       <span class="inline-flex items-center gap-2">
         <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
-        Available for work
+        <time id="local-time" class="tabular-nums">--:--</time>
+        <span>your time</span>
       </span>
     </div>
 
@@ -50,8 +54,24 @@ import HeroField from './HeroField.astro';
     <!-- Latest -->
     <a href="#lab" class="group inline-flex flex-wrap items-baseline gap-x-3 gap-y-1 pt-4 text-sm text-muted hover:text-fg transition-colors">
       <span class="label-mono text-accent">Latest</span>
-      <span><span class="text-fg font-medium">WebP Converter</span> — an in-browser image optimizer</span>
+      <span><span class="text-fg font-medium">{latest.title}</span> — {latest.tagline}</span>
       <span class="text-subtle group-hover:translate-y-0.5 transition-transform">↓</span>
     </a>
   </div>
 </section>
+
+<script>
+  // Visitor's local time, refreshed on each minute change.
+  const el = document.getElementById('local-time');
+  const format = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
+
+  function tick() {
+    if (!el) return;
+    const now = new Date();
+    el.textContent = format.format(now);
+    el.dateTime = now.toISOString();
+    setTimeout(tick, 60_000 - (now.getSeconds() * 1000 + now.getMilliseconds()));
+  }
+
+  tick();
+</script>
