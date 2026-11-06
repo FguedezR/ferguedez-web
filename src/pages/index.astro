@@ -10,6 +10,7 @@ import CertificationItem from '../components/CertificationItem.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import LabItem from '../components/LabItem.astro';
 import WebpPreview from '../components/WebpPreview.astro';
+import VideoPreview from '../components/VideoPreview.astro';
 
 const projects = [
   {
@@ -124,6 +125,15 @@ const projects = [
         </p>
         <LabItem
           label="Latest"
+          title="Video Converter"
+          description="A browser-based video compressor for background heroes, with no uploads. Trim the clip, pick a poster frame and export WebM (VP9) and MP4 (H.264) versions, plus a ready-to-paste HTML snippet, as a ZIP."
+          tags={['Tool', 'Client-side', 'WebCodecs', 'Video optimization']}
+          link="https://video.ferguedez.dev/"
+        >
+          <VideoPreview slot="preview" />
+        </LabItem>
+        <LabItem
+          label="Previous"
           title="WebP Converter"
           description="A privacy-first image converter that runs entirely in the browser, with no uploads. Drop images or a whole folder, set quality and maximum size, and download optimized WebP files as a ZIP."
           tags={['Tool', 'Client-side', 'Image optimization']}
