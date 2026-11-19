@@ -8,13 +8,7 @@ import Section from '../components/Section.astro';
 import ExperienceItem from '../components/ExperienceItem.astro';
 import CertificationItem from '../components/CertificationItem.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import LabItem from '../components/LabItem.astro';
-import WebpPreview from '../components/WebpPreview.astro';
-import VideoPreview from '../components/VideoPreview.astro';
-import MdPreview from '../components/MdPreview.astro';
-import { lab } from '../data/lab';
-
-const previews = { md: MdPreview, video: VideoPreview, webp: WebpPreview };
+import LabHub from '../components/LabHub.astro';
 
 const projects = [
   {
@@ -127,14 +121,7 @@ const projects = [
         <p class="-mt-4 mb-10 max-w-[60ch] text-muted leading-relaxed">
           Small tools and experiments built in the open.
         </p>
-        {lab.map(({ preview, tagline, ...item }) => {
-          const Preview = previews[preview];
-          return (
-            <LabItem label="Latest" {...item}>
-              <Preview slot="preview" />
-            </LabItem>
-          );
-        })}
+        <LabHub />
       </Section>
     </main>
   </div>
