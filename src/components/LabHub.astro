@@ -1,0 +1,541 @@
+---
+// Lab as a workbench instead of a list: on desktop an index on the left and a stage on the
+// right (the hero's dot field, the tool's preview as a card that gets "placed", and
+// annotations drawn like dimension lines). On mobile, a deck of full-width plates swiped
+// with native scroll snap. All tools are in the HTML; scripts only decide which is visible.
+import MdPreview from './MdPreview.astro';
+import VideoPreview from './VideoPreview.astro';
+import WebpPreview from './WebpPreview.astro';
+import { lab } from '../data/lab';
+
+const previews = { md: MdPreview, video: VideoPreview, webp: WebpPreview };
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<div class="lh" data-lab-hub>
+  <!-- Desktop: index + stage -->
+  <div class="lh-hub">
+    <div class="lh-index">
+      <div class="lh-tabs" role="tablist" aria-orientation="vertical" aria-label="Lab tools">
+        {lab.map((tool, i) => (
+          <button
+            type="button"
+            role="tab"
+            class="lh-tab"
+            id={`lh-tab-${tool.preview}`}
+            aria-controls={`lh-panel-${tool.preview}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            data-index={i}
+          >
+            <span class="lh-pn">{tool.pn.slice(-3)}</span>
+            <span class="lh-title">{tool.title}{i === 0 && <span class="lh-new">New</span>}</span>
+            <span class="lh-date">{tool.date}</span>
+            <span class="lh-tagline">{tool.tagline}</span>
+          </button>
+        ))}
+      </div>
+      {lab.map((tool, i) => (
+        <div class="lh-detail" role="tabpanel" id={`lh-panel-${tool.preview}`} aria-labelledby={`lh-tab-${tool.preview}`} hidden={i !== 0}>
+          <p>{tool.description}</p>
+          <ul class="lh-chips">
+            {tool.tags.map((tag) => <li class="label-mono">{tag}</li>)}
+          </ul>
+          <a href={tool.link} target="_blank" rel="noopener noreferrer" class="lh-open label-mono link-underline">Open {tool.title} ↗</a>
+        </div>
+      ))}
+    </div>
+
+    <div class="lh-stage" data-stage aria-hidden="true">
+      <canvas class="lh-field" data-field></canvas>
+      <div class="lh-cross-x" data-cross-x></div>
+      <div class="lh-cross-y" data-cross-y></div>
+      {lab.map((tool, i) => (
+        <div class="lh-spec label-mono" data-for={i} data-active={i === 0 ? '' : undefined}>
+          {tool.spec.map(([k, v]) => <span>{k} <b>{v}</b></span>)}
+        </div>
+      ))}
+      <svg class="lh-leaders" data-leaders></svg>
+      <div class="lh-labels" data-labels></div>
+      <div class="lh-slot" data-slot>
+        {lab.map((tool, i) => {
+          const Preview = previews[tool.preview];
+          return (
+            <a class="lh-card" href={tool.link} target="_blank" rel="noopener noreferrer" tabindex="-1" data-card={i} data-notes={JSON.stringify(tool.notes)} data-active={i === 0 ? '' : undefined}>
+              <Preview />
+            </a>
+          );
+        })}
+      </div>
+      {lab.map((tool, i) => (
+        <div class="lh-fig label-mono" data-for={i} data-active={i === 0 ? '' : undefined}>fig. {tool.pn.slice(-2)} — <span>{tool.host}</span></div>
+      ))}
+      <div class="lh-readout label-mono" data-readout>x <b>0.50</b> · y <b>0.50</b></div>
+    </div>
+  </div>
+
+  <!-- Mobile: deck of plates -->
+  <div class="lh-deck" aria-roledescription="carousel" aria-label="Lab tools">
+    <div class="lh-track" data-track>
+      {lab.map((tool, i) => {
+        const Preview = previews[tool.preview];
+        return (
+          <article class="lh-plate" aria-roledescription="slide" aria-label={`${i + 1} of ${lab.length}: ${tool.title}`}>
+            <a class="lh-plate-stage" href={tool.link} target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+              <span class="lh-plate-spec label-mono">{tool.spec.map(([k, v]) => <span>{k} <b>{v}</b></span>)}</span>
+              <span class="lh-plate-card" data-plate-card><Preview /></span>
+              <span class="lh-plate-fig label-mono">fig. {tool.pn.slice(-2)} — {tool.host}</span>
+            </a>
+            <div class="lh-plate-body">
+              <div class="lh-plate-meta label-mono"><span class="text-accent">{tool.pn}</span><span>{tool.date}</span></div>
+              <h3>{tool.title}{i === 0 && <span class="lh-new">New</span>}</h3>
+              <p class="lh-plate-tagline">{tool.tagline}</p>
+              <p class="lh-plate-desc">{tool.description}</p>
+              <ul class="lh-notes">
+                {tool.notes.map((n) => <li><small>{n.label}</small><span>{n.text}</span></li>)}
+              </ul>
+              <ul class="lh-chips">
+                {tool.tags.map((tag) => <li class="label-mono">{tag}</li>)}
+              </ul>
+              <a href={tool.link} target="_blank" rel="noopener noreferrer" class="lh-open label-mono link-underline">Open {tool.title} ↗</a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+    <div class="lh-nav">
+      <span class="lh-count label-mono" data-count aria-live="polite"><b>01</b> / {pad(lab.length)}</span>
+      <div class="lh-bar">
+        {lab.map((tool, i) => (
+          <button type="button" class="lh-seg" data-seg={i} aria-label={`Go to ${tool.title}`}><i></i></button>
+        ))}
+      </div>
+      <div class="lh-arrows">
+        <button type="button" data-prev aria-label="Previous tool" disabled>←</button>
+        <button type="button" data-next aria-label="Next tool">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .lh { --lh-ease: cubic-bezier(.2, .85, .25, 1); --lh-mono: var(--font-geist-mono), ui-monospace, monospace; }
+
+  /* ---------- Desktop ---------- */
+  .lh-hub { display: none; }
+  .lh-deck { display: block; }
+  @media (min-width: 768px) {
+    .lh-hub { display: grid; grid-template-columns: minmax(0, 264px) minmax(0, 1fr); width: calc(100vw - 48px); border: 1px solid var(--c-line); border-radius: 6px; background: var(--c-surface); overflow: hidden; }
+    .lh-deck { display: none; }
+  }
+  /* The workbench is wider than the reading column: it extends to the right, aligned with the right edge of the page container.
+     Left edge of <main> = container gutter + side index (200px) + gap (64px). */
+  @media (min-width: 1024px) { .lh-hub { width: calc(100vw - 328px); } }
+  @media (min-width: 1152px) { .lh-hub { width: 824px; } }
+
+  .lh-index { display: flex; flex-direction: column; min-width: 0; border-right: 1px solid var(--c-line); }
+  .lh-tabs { display: flex; flex-direction: column; }
+  .lh-tab {
+    position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 2px 10px;
+    width: 100%; padding: 14px 16px; text-align: left; color: var(--c-muted);
+    background: none; border: 0; border-bottom: 1px solid var(--c-line); cursor: pointer;
+    transition: background-color .2s, color .2s;
+  }
+  .lh-tab::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 2px; background: var(--c-accent); transform: scaleY(0); transform-origin: top; transition: transform .35s var(--lh-ease); }
+  .lh-pn { grid-row: 1 / 3; padding-top: 3px; font: 500 11px var(--lh-mono); color: var(--c-subtle); }
+  .lh-title { white-space: nowrap; font-size: 15px; font-weight: 600; letter-spacing: -.01em; color: var(--c-fg); opacity: .55; transition: opacity .2s; }
+  .lh-date { font: 400 11px var(--lh-mono); color: var(--c-subtle); font-variant-numeric: tabular-nums; }
+  .lh-tagline { grid-column: 2 / 4; font-size: 13px; line-height: 1.4; }
+  .lh-new { margin-left: 8px; font: 500 9px var(--lh-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--c-accent); vertical-align: 2px; }
+  .lh-tab:hover .lh-title { opacity: .85; }
+  .lh-tab[aria-selected="true"] { background: var(--c-accent-soft); color: var(--c-fg); }
+  .lh-tab[aria-selected="true"] .lh-title { opacity: 1; }
+  .lh-tab[aria-selected="true"] .lh-pn { color: var(--c-accent); }
+  .lh-tab[aria-selected="true"]::before { transform: scaleY(1); }
+  .lh-tab:focus-visible { outline-offset: -2px; }
+
+  .lh-detail { display: flex; flex-direction: column; gap: 14px; padding: 18px 16px; flex: 1; animation: lh-detail-in .3s var(--lh-ease); }
+  .lh-detail[hidden] { display: none; }
+  .lh-detail p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--c-muted); text-wrap: pretty; }
+  @keyframes lh-detail-in { from { opacity: 0; transform: translateY(4px); } }
+  .lh-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .lh-chips li { padding: 4px 7px; border: 1px solid var(--c-line); border-radius: 2px; color: var(--c-muted); font-size: 10px; }
+  .lh-open { margin-top: auto; align-self: flex-start; color: var(--c-accent); }
+
+  .lh-stage { position: relative; min-width: 0; min-height: 480px; background: var(--c-bg); overflow: hidden; cursor: crosshair; }
+  .lh-field { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .lh-cross-x, .lh-cross-y { position: absolute; pointer-events: none; opacity: 0; transition: opacity .25s; }
+  .lh-cross-x { left: 0; right: 0; border-top: 1px dashed color-mix(in srgb, var(--c-accent) 45%, transparent); }
+  .lh-cross-y { top: 0; bottom: 0; border-left: 1px dashed color-mix(in srgb, var(--c-accent) 45%, transparent); }
+  .lh-stage.is-pointing .lh-cross-x, .lh-stage.is-pointing .lh-cross-y { opacity: 1; }
+  .lh-spec, .lh-fig, .lh-readout { position: absolute; color: var(--c-subtle); pointer-events: none; font-size: 10px; }
+  .lh-spec { left: 14px; right: 14px; top: 12px; display: flex; flex-wrap: wrap; gap: 4px 18px; }
+  .lh-spec b, .lh-fig span, .lh-readout b { font-weight: 500; }
+  .lh-spec b { color: var(--c-muted); }
+  .lh-fig { left: 14px; bottom: 12px; }
+  .lh-fig span { color: var(--c-fg); }
+  .lh-readout { right: 14px; bottom: 12px; font-variant-numeric: tabular-nums; }
+  .lh-readout b { color: var(--c-accent); }
+  .lh-spec, .lh-fig { opacity: 0; transition: opacity .3s; }
+  .lh-spec[data-active], .lh-fig[data-active] { opacity: 1; }
+
+  .lh-leaders { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .lh-leaders path { fill: none; stroke: var(--c-muted); stroke-width: 1; }
+  .lh-leaders .dot { fill: var(--c-accent); }
+  .lh-leaders .ring { fill: none; stroke: var(--c-accent); stroke-width: 1; opacity: .4; }
+  .lh-labels { position: absolute; inset: 0; pointer-events: none; }
+  .lh-ann { position: absolute; transform: translateY(-50%); font: 400 11px/1.35 var(--lh-mono); color: var(--c-fg); }
+  .lh-ann small { display: block; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--c-subtle); }
+  .lh-ann.left { text-align: right; }
+
+  .lh-slot { position: absolute; left: 50%; top: 50%; width: clamp(250px, 48%, 340px); transform: translateX(-50%); }
+  .lh-card { position: absolute; left: 0; top: 0; width: 100%; transform: translateY(-50%); visibility: hidden; opacity: 0; }
+  .lh-card[data-active] { visibility: visible; opacity: 1; }
+  .lh-card > div { box-shadow: 0 1px 0 rgb(0 0 0 / .04), 0 14px 32px -18px rgb(0 0 0 / .45); }
+
+  /* ---------- Mobile deck ---------- */
+  .lh-track {
+    display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin-inline: -1rem; padding: 4px 1rem 8px; scroll-padding-inline: 1rem;
+  }
+  @media (min-width: 640px) { .lh-track { margin-inline: -1.5rem; padding-inline: 1.5rem; scroll-padding-inline: 1.5rem; } }
+  .lh-track::-webkit-scrollbar { display: none; }
+  .lh-plate { flex: 0 0 calc(100% - 28px); max-width: 460px; scroll-snap-align: start; scroll-snap-stop: always; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--c-line); border-radius: 6px; background: var(--c-surface); }
+  .lh-plate-stage {
+    position: relative; display: grid; place-items: center; padding: 40px 18px 36px;
+    background-color: var(--c-bg);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--c-subtle) 55%, transparent) 1px, transparent 1.6px);
+    background-size: 22px 22px; background-position: center;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .lh-plate-spec { position: absolute; left: 12px; right: 12px; top: 11px; display: flex; justify-content: space-between; gap: 12px; color: var(--c-subtle); font-size: 10px; }
+  .lh-plate-spec b { font-weight: 500; color: var(--c-muted); }
+  .lh-plate-spec > span { white-space: nowrap; }
+  /* On narrow phones only the first spec fits on one line. */
+  @media (max-width: 479px) { .lh-plate-spec > span + span { display: none; } }
+  .lh-plate-fig { position: absolute; left: 12px; bottom: 9px; color: var(--c-subtle); font-size: 10px; }
+  .lh-plate-card { display: block; width: min(320px, 100%); transform-origin: 50% 80%; will-change: transform; }
+  .lh-plate-card > div { box-shadow: 0 14px 32px -18px rgb(0 0 0 / .45); }
+  .lh-plate-body { display: flex; flex-direction: column; gap: 14px; padding: 20px 18px 22px; flex: 1; }
+  .lh-plate-meta { display: flex; justify-content: space-between; color: var(--c-subtle); }
+  .lh-plate h3 { margin: 0; font-size: 1.5rem; line-height: 1.15; font-weight: 600; letter-spacing: -.02em; color: var(--c-fg); text-wrap: balance; }
+  .lh-plate h3 .lh-new { vertical-align: 5px; }
+  .lh-plate-tagline { margin: -8px 0 0; font-size: 14px; color: var(--c-muted); }
+  .lh-plate-desc { margin: 0; font-size: 15px; line-height: 1.6; color: var(--c-muted); text-wrap: pretty; }
+  .lh-notes { display: grid; gap: 10px; margin: 0; padding: 14px 0 0; list-style: none; border-top: 1px dashed var(--c-line-strong); }
+  .lh-notes li { display: grid; grid-template-columns: 76px 1fr; gap: 12px; font: 400 12px/1.45 var(--lh-mono); color: var(--c-fg); }
+  .lh-notes small { padding-top: 1px; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--c-subtle); }
+  .lh-plate .lh-open { margin-top: 4px; }
+
+  .lh-nav { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
+  .lh-count { min-width: 52px; color: var(--c-subtle); font-variant-numeric: tabular-nums; }
+  .lh-count b { font-weight: 500; color: var(--c-fg); }
+  .lh-bar { flex: 1; display: flex; gap: 6px; }
+  .lh-seg { position: relative; flex: 1; height: 28px; padding: 0; background: none; border: 0; cursor: pointer; }
+  .lh-seg::before, .lh-seg i { content: ""; position: absolute; left: 0; right: 0; top: 13px; height: 2px; }
+  .lh-seg::before { background: var(--c-line-strong); }
+  .lh-seg i { background: var(--c-accent); transform: scaleX(var(--fill, 0)); transform-origin: left; }
+  .lh-arrows { display: flex; gap: 6px; }
+  .lh-arrows button { width: 36px; height: 36px; display: grid; place-items: center; font: 500 14px var(--lh-mono); color: var(--c-fg); background: var(--c-surface); border: 1px solid var(--c-line-strong); border-radius: 4px; cursor: pointer; }
+  .lh-arrows button:disabled { opacity: .45; cursor: default; }
+</style>
+
+<script>
+  const SVGNS = 'http://www.w3.org/2000/svg';
+
+  function setupLabHub() {
+    const root = document.querySelector<HTMLElement>('[data-lab-hub]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = '1';
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setupHub(root, reduceMotion);
+    setupDeck(root, reduceMotion);
+  }
+
+  /* ---------- Desktop hub ---------- */
+  function setupHub(root: HTMLElement, reduceMotion: boolean) {
+    const stage = root.querySelector<HTMLElement>('[data-stage]')!;
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.lh-tab')];
+    const panels = [...root.querySelectorAll<HTMLElement>('.lh-detail')];
+    const cards = [...root.querySelectorAll<HTMLElement>('[data-card]')];
+    const swaps = [...root.querySelectorAll<HTMLElement>('.lh-spec, .lh-fig')];
+    const slot = root.querySelector<HTMLElement>('[data-slot]')!;
+    const svg = root.querySelector<SVGSVGElement>('[data-leaders]')!;
+    const labels = root.querySelector<HTMLElement>('[data-labels]')!;
+    let current = 0;
+    let token = 0;
+
+    const visible = () => stage.offsetParent !== null;
+
+    // Position inside the stage ignoring transforms (offset*, not getBoundingClientRect).
+    const within = (el: HTMLElement, until: HTMLElement) => {
+      let x = 0, y = 0, n: HTMLElement | null = el;
+      while (n && n !== until) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
+      return { x, y };
+    };
+
+    function clearLeaders() { svg.replaceChildren(); labels.replaceChildren(); }
+
+    function drawLeaders(i: number, animate: boolean, t: number) {
+      if (t !== token || !visible()) return;
+      clearLeaders();
+      const card = cards[i];
+      const notes = JSON.parse(card.dataset.notes || '[]') as { anchor: string; side: 'left' | 'right'; label: string; text: string }[];
+      const s = within(slot, stage);
+      const w = slot.offsetWidth, h = card.offsetHeight;
+      const box = { x: s.x - w / 2, y: s.y - h / 2, w };
+      const sw = stage.clientWidth;
+      const sides: Record<'left' | 'right', { note: (typeof notes)[number]; ax: number; ay: number; ly: number }[]> = { left: [], right: [] };
+      for (const note of notes) {
+        const a = card.querySelector<HTMLElement>(`[data-anchor="${note.anchor}"]`);
+        if (!a) continue;
+        const p = within(a, card);
+        const ax = box.x + p.x + (note.side === 'left' ? 10 : a.offsetWidth - 10);
+        const ay = box.y + p.y + a.offsetHeight / 2;
+        sides[note.side].push({ note, ax, ay, ly: ay });
+      }
+      for (const list of Object.values(sides)) {
+        list.sort((p, q) => p.ay - q.ay);
+        for (let k = 1; k < list.length; k++) list[k].ly = Math.max(list[k].ly, list[k - 1].ly + 44);
+      }
+      let k = 0;
+      for (const side of ['left', 'right'] as const) {
+        for (const p of sides[side]) {
+          const edge = side === 'left' ? box.x - 16 : box.x + box.w + 16;
+          const lx = side === 'left' ? edge - 8 : edge + 8;
+          const room = Math.max(80, Math.min(150, side === 'left' ? lx - 10 : sw - lx - 10));
+          const path = document.createElementNS(SVGNS, 'path');
+          path.setAttribute('d', `M ${lx} ${p.ly} H ${edge} L ${edge + (side === 'left' ? 10 : -10)} ${p.ay} H ${p.ax}`);
+          const ring = document.createElementNS(SVGNS, 'circle');
+          ring.setAttribute('class', 'ring');
+          const dot = document.createElementNS(SVGNS, 'circle');
+          dot.setAttribute('class', 'dot');
+          for (const [c, r] of [[ring, 7], [dot, 2.5]] as const) {
+            c.setAttribute('cx', String(p.ax)); c.setAttribute('cy', String(p.ay)); c.setAttribute('r', String(r));
+          }
+          svg.append(path, ring, dot);
+          const label = document.createElement('div');
+          label.className = `lh-ann ${side}`;
+          label.style.top = `${p.ly}px`;
+          label.style.width = `${room}px`;
+          label.style.left = `${side === 'left' ? lx - room : lx}px`;
+          label.append(Object.assign(document.createElement('small'), { textContent: p.note.label }), p.note.text);
+          labels.append(label);
+          if (animate) {
+            const len = path.getTotalLength();
+            const delay = 80 + k * 110;
+            path.animate([{ strokeDasharray: `${len}`, strokeDashoffset: `${len}` }, { strokeDasharray: `${len}`, strokeDashoffset: '0' }], { duration: 420, delay, easing: 'ease-out', fill: 'backwards' });
+            const origin = `${p.ax}px ${p.ay}px`;
+            dot.animate([{ transform: 'scale(0)', transformOrigin: origin }, { transform: 'scale(1)', transformOrigin: origin }], { duration: 260, delay: delay + 360, easing: 'cubic-bezier(.3,1.6,.5,1)', fill: 'backwards' });
+            ring.animate([{ opacity: 0 }, { opacity: 0.4 }], { duration: 300, delay: delay + 420, fill: 'backwards' });
+            label.animate([{ opacity: 0, transform: `translate(${side === 'left' ? 6 : -6}px, -50%)` }, { opacity: 1, transform: 'translate(0, -50%)' }], { duration: 300, delay: delay + 200, easing: 'ease-out', fill: 'backwards' });
+          }
+          k++;
+        }
+      }
+    }
+
+    // The previous card lifts away; the new one lands slightly tilted and settles, like a card on a table.
+    function place(i: number, prev: number) {
+      const t = ++token;
+      clearLeaders();
+      const old = cards[prev];
+      const next = cards[i];
+      if (reduceMotion) {
+        old.removeAttribute('data-active');
+        next.setAttribute('data-active', '');
+        drawLeaders(i, false, t);
+        return;
+      }
+      old.animate([{ opacity: 1, transform: 'translateY(-50%)' }, { opacity: 0, transform: 'translateY(calc(-50% - 10px)) scale(.985)' }], { duration: 180, easing: 'ease-in' })
+        .finished.then(() => { if (current !== prev) old.removeAttribute('data-active'); }).catch(() => {});
+      next.setAttribute('data-active', '');
+      next.animate([
+        { opacity: 0, transform: 'translateY(calc(-50% + 22px)) rotate(-1.4deg) scale(.97)' },
+        { opacity: 1, offset: 0.45 },
+        { opacity: 1, transform: 'translateY(-50%) rotate(0) scale(1)' },
+      ], { duration: 560, delay: 120, easing: 'cubic-bezier(.2,.85,.25,1)', fill: 'backwards' });
+      setTimeout(() => drawLeaders(i, true, t), 520);
+    }
+
+    function select(i: number) {
+      if (i === current) return;
+      const prev = current;
+      current = i;
+      tabs.forEach((tab, j) => { tab.setAttribute('aria-selected', String(j === i)); tab.tabIndex = j === i ? 0 : -1; });
+      panels.forEach((panel, j) => { panel.hidden = j !== i; });
+      swaps.forEach((el) => el.toggleAttribute('data-active', el.dataset.for === String(i)));
+      place(i, prev);
+      ripple(i);
+    }
+
+    tabs.forEach((tab, i) => {
+      let timer = 0;
+      // Hover intent: a short delay so sweeping across the list doesn't flicker the stage.
+      tab.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { clearTimeout(timer); timer = window.setTimeout(() => select(i), 90); } });
+      tab.addEventListener('pointerleave', () => clearTimeout(timer));
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('focus', () => select(i));
+    });
+    root.querySelector('.lh-tabs')!.addEventListener('keydown', (e) => {
+      const key = (e as KeyboardEvent).key;
+      const n = tabs.length;
+      const next = key === 'ArrowDown' ? (current + 1) % n : key === 'ArrowUp' ? (current - 1 + n) % n : key === 'Home' ? 0 : key === 'End' ? n - 1 : -1;
+      if (next < 0) return;
+      e.preventDefault();
+      tabs[next].focus();
+    });
+
+    /* Dot field: the hero's, scaled down */
+    const canvas = root.querySelector<HTMLCanvasElement>('[data-field]')!;
+    const ctx = canvas.getContext('2d')!;
+    const crossX = root.querySelector<HTMLElement>('[data-cross-x]')!;
+    const crossY = root.querySelector<HTMLElement>('[data-cross-y]')!;
+    const readout = root.querySelector<HTMLElement>('[data-readout]')!;
+    const SPACING = 22, RADIUS = 130, PUSH = 8, LIFE = 1500;
+    let W = 0, H = 0, raf = 0;
+    let colors = { dot: '', accent: '' };
+    const ptr = { x: 0, y: 0, tx: 0, ty: 0, inside: false, presence: 0 };
+    const ripples: { x: number; y: number; t: number }[] = [];
+    const smooth = (t: number) => t * t * (3 - 2 * t);
+
+    const readColors = () => {
+      const s = getComputedStyle(document.documentElement);
+      colors = { dot: s.getPropertyValue('--c-subtle').trim(), accent: s.getPropertyValue('--c-accent').trim() };
+    };
+
+    function draw(now: number) {
+      ctx.clearRect(0, 0, W, H);
+      ptr.x += (ptr.tx - ptr.x) * 0.18;
+      ptr.y += (ptr.ty - ptr.y) * 0.18;
+      ptr.presence += ((ptr.inside ? 1 : 0) - ptr.presence) * 0.08;
+      for (let i = ripples.length - 1; i >= 0; i--) if (now - ripples[i].t > LIFE) ripples.splice(i, 1);
+      const ox = (W % SPACING) / 2, oy = (H % SPACING) / 2;
+      for (let gx = ox; gx <= W; gx += SPACING) {
+        for (let gy = oy; gy <= H; gy += SPACING) {
+          let x = gx, y = gy, r = 1, hot = 0;
+          if (ptr.presence > 0.01) {
+            const dx = gx - ptr.x, dy = gy - ptr.y, d = Math.hypot(dx, dy);
+            if (d < RADIUS) {
+              const f = smooth(1 - d / RADIUS) * ptr.presence;
+              x += (dx / (d || 1)) * PUSH * f; y += (dy / (d || 1)) * PUSH * f; r += f * 1.3; hot = Math.max(hot, f);
+            }
+          }
+          for (const rp of ripples) {
+            const age = now - rp.t, d = Math.hypot(gx - rp.x, gy - rp.y), band = Math.abs(d - age * 0.5);
+            if (band < 40) {
+              const f = (1 - band / 40) * (1 - age / LIFE);
+              x += ((gx - rp.x) / (d || 1)) * 3 * f; y += ((gy - rp.y) / (d || 1)) * 3 * f; r += f * 1.4; hot = Math.max(hot, f);
+            }
+          }
+          ctx.globalAlpha = 0.45 + hot * 0.55;
+          ctx.fillStyle = hot > 0.15 ? colors.accent : colors.dot;
+          ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+      const busy = ripples.length > 0 || Math.abs(ptr.tx - ptr.x) > 0.3 || Math.abs(ptr.ty - ptr.y) > 0.3 || (ptr.presence > 0.01 && ptr.presence < 0.99);
+      raf = busy && !reduceMotion ? requestAnimationFrame(draw) : 0;
+    }
+    const kick = () => { if (!raf && !reduceMotion) raf = requestAnimationFrame(draw); };
+
+    function resize() {
+      const r = stage.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = r.width; H = r.height;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw(performance.now());
+      drawLeaders(current, false, token);
+    }
+
+    // The wave starts at the stage edge next to the index, level with the chosen tab.
+    function ripple(i: number) {
+      if (reduceMotion) return;
+      const tab = tabs[i].getBoundingClientRect(), s = stage.getBoundingClientRect();
+      ripples.push({ x: 0, y: Math.min(Math.max(tab.top + tab.height / 2 - s.top, 0), H), t: performance.now() });
+      kick();
+    }
+
+    stage.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const r = stage.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      ptr.tx = x; ptr.ty = y;
+      if (!ptr.inside) { ptr.x = x; ptr.y = y; }
+      ptr.inside = true;
+      stage.classList.add('is-pointing');
+      crossX.style.top = `${y}px`;
+      crossY.style.left = `${x}px`;
+      readout.innerHTML = `x <b>${(x / r.width).toFixed(2)}</b> · y <b>${(y / r.height).toFixed(2)}</b>`;
+      kick();
+    });
+    stage.addEventListener('pointerleave', () => {
+      ptr.inside = false;
+      stage.classList.remove('is-pointing');
+      readout.innerHTML = 'x <b>0.50</b> · y <b>0.50</b>';
+      kick();
+    });
+    stage.addEventListener('click', (e) => {
+      if ((e.target as Element).closest('[data-card]')) return;
+      const r = stage.getBoundingClientRect();
+      ripples.push({ x: e.clientX - r.left, y: e.clientY - r.top, t: performance.now() });
+      kick();
+    });
+
+    readColors();
+    new MutationObserver(() => { readColors(); draw(performance.now()); }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    new ResizeObserver(resize).observe(stage);
+    document.fonts?.ready.then(() => drawLeaders(current, false, token));
+  }
+
+  /* ---------- Mobile deck ---------- */
+  function setupDeck(root: HTMLElement, reduceMotion: boolean) {
+    const track = root.querySelector<HTMLElement>('[data-track]')!;
+    const plates = [...track.children] as HTMLElement[];
+    const cards = plates.map((p) => p.querySelector<HTMLElement>('[data-plate-card]')!);
+    const segs = [...root.querySelectorAll<HTMLElement>('[data-seg]')];
+    const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const prevBtn = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const nextBtn = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const total = String(plates.length).padStart(2, '0');
+    let index = 0, raf = 0;
+
+    const step = () => (plates.length > 1 ? plates[1].offsetLeft - plates[0].offsetLeft : track.clientWidth);
+    const goTo = (i: number) => {
+      i = Math.max(0, Math.min(plates.length - 1, i));
+      track.scrollTo({ left: i * step(), behavior: reduceMotion ? 'auto' : 'smooth' });
+    };
+
+    // Follows the finger: the bar fills continuously and each card tilts and drifts by how far
+    // it is from the centre, like paper slid across a table.
+    function onScroll() {
+      raf = 0;
+      const pos = track.scrollLeft / step();
+      segs.forEach((seg, i) => seg.style.setProperty('--fill', String(Math.max(0, Math.min(1, pos - i + 1)))));
+      if (!reduceMotion) {
+        cards.forEach((card, i) => {
+          const d = Math.max(-1, Math.min(1, i - pos));
+          card.style.transform = `translateX(${d * -28}px) rotate(${d * 2.2}deg) scale(${1 - Math.abs(d) * 0.04})`;
+        });
+      }
+      const idx = Math.max(0, Math.min(plates.length - 1, Math.round(pos)));
+      if (idx !== index) {
+        index = idx;
+        count.innerHTML = `<b>${String(index + 1).padStart(2, '0')}</b> / ${total}`;
+      }
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index === plates.length - 1;
+    }
+
+    track.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(onScroll); }, { passive: true });
+    segs.forEach((seg, i) => seg.addEventListener('click', () => goTo(i)));
+    prevBtn.addEventListener('click', () => goTo(index - 1));
+    nextBtn.addEventListener('click', () => goTo(index + 1));
+    onScroll();
+  }
+
+  setupLabHub();
+  document.addEventListener('astro:page-load', setupLabHub);
+</script>
