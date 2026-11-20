@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <title>OG image template</title>
+  <style>
+    /* Plantilla de public/og.png (1200×630), mismo diseño que la de md.ferguedez.dev con el acento oscuro del portfolio. */
+    @font-face { font-family: "Geist Mono"; src: url("fonts/GeistMono-Variable.woff2") format("woff2"); font-weight: 100 900; }
+    @font-face { font-family: "Geist Pixel"; src: url("fonts/GeistPixel-Square.woff2") format("woff2"); }
+    :root { --bg: #0a0a0a; --line: #262626; --fg: #ededed; --muted: #a1a1a1; --accent: #7aa2ff; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); }
+    .card { position: relative; display: flex; flex-direction: column; justify-content: space-between; width: 1200px; height: 630px; padding: 64px 72px; color: var(--fg); font: 400 24px/1.4 "Geist Mono", monospace; border: 1px solid var(--line); }
+    .card::after { content: ""; position: absolute; right: 72px; top: 64px; width: 56px; height: 56px; background: var(--accent); }
+    .eyebrow { margin: 0; color: var(--muted); font-size: 20px; letter-spacing: .14em; text-transform: uppercase; }
+    h1 { margin: 0; font: 400 136px/0.98 "Geist Pixel", monospace; letter-spacing: -.01em; }
+    .sub { margin: 28px 0 0; font: 400 56px/1 "Geist Pixel", monospace; color: var(--muted); }
+    .arrow { color: var(--accent); }
+    .foot { display: flex; align-items: center; gap: 16px; margin: 0; padding-top: 24px; border-top: 1px solid var(--line); font-size: 24px; }
+    .mark { width: 16px; height: 16px; background: var(--accent); }
+    .dim { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="eyebrow">Madrid, Spain · portfolio</p>
+    <div>
+      <h1>Fernando<br>Guedez</h1>
+      <p class="sub">Design <span class="arrow">→</span> Full Stack</p>
+    </div>
+    <p class="foot"><span class="mark" aria-hidden="true"></span>ferguedez.dev <span class="dim">· web designer &amp; full stack developer</span></p>
+  </div>
+</body>
+</html>
